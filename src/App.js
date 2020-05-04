@@ -24,10 +24,10 @@ function App() {
 
   return (
     <div className="App">
-      {tables.map(table => {
+      {/* {tables.map(table => {
         return <Table key={table.id} table={table}/>
-      })}
-      {/* <CreateTableForm/> */}
+      })} */}
+      <CreateTableForm/>
     </div>
   );
 }

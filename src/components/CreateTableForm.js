@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {createTable} from '../services/firestore';
 
 const initialCards = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:0};
@@ -7,6 +7,11 @@ function CreateTableForm() {
   
   const [id, setId] = useState('');
   const [cards, setCards] = useState(initialCards);
+  
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  },[]);
   
   const postTable = (e) => {
     e.preventDefault();
@@ -21,6 +26,7 @@ function CreateTableForm() {
         console.log('Document successfully written');
         setCards(initialCards);
         setId('');
+        inputRef.current.focus();
       })
       .catch(err => {
         console.log('Error writing document', err);
@@ -33,7 +39,7 @@ function CreateTableForm() {
       <h2>Create New Table</h2>
       <form onSubmit={postTable}>
         <div>
-          <input type="number" onChange={e => setCards({...cards, 0: e.target.value})} value={cards[0]}/>
+          <input type="number" onChange={e => setCards({...cards, 0: e.target.value})} value={cards[0]} ref={inputRef}/>
           <input type="number" onChange={e => setCards({...cards, 1: e.target.value})} value={cards[1]}/>
           <input type="number" onChange={e => setCards({...cards, 2: e.target.value})} value={cards[2]}/>
           <input type="number" onChange={e => setCards({...cards, 3: e.target.value})} value={cards[3]}/>

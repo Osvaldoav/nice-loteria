@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import { array } from "prop-types";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -23,5 +24,11 @@ export const getTables = () => {
 
 // Creates a new table document
 export const createTable = (data, id) => {
+  if(new Set(data.cards).size !== data.cards.length)
+    return Promise.reject(new Error('Table cannot have duplicated cards'));
+  
+  if(!data.cards.every(card => card >= 1 && card <= 54))
+    return Promise.reject(new Error('All cards value must be between 1-54'));
+
   return db.collection('tables').doc(id).set(data, {merge: true});
 };
