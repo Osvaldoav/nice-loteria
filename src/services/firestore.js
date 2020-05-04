@@ -16,6 +16,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// Get all existing tables documents
 export const getTables = () => {
   return db.collection('tables').get();
+};
+
+// Creates a new table document
+export const createTable = (data, id) => {
+  return db.collection('tables').doc(id).set(data, {merge: true});
 };

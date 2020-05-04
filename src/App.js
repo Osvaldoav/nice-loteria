@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import * as FirestoreService from './services/firestore';
 import './App.css';
 import Table from './components/Table';
+import CreateTableForm from './components/CreateTableForm';
 
 function App() {
 
@@ -23,10 +24,10 @@ function App() {
 
   return (
     <div className="App">
-      <h2>Home</h2>
       {tables.map(table => {
         return <Table key={table.id} table={table}/>
       })}
+      {/* <CreateTableForm/> */}
     </div>
   );
 }
