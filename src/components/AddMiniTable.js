@@ -1,0 +1,42 @@
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import {Typography, Card, Grid} from '@material-ui/core';
+import MuiCardActionArea from '@material-ui/core/CardActionArea';
+import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
+
+const style = {
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    color: '#757575'
+  }
+};
+
+const CardActionArea = withStyles({
+  root: {
+    width: '112px',
+    height: '100%',
+    minHeight: '180px'
+  }
+})(MuiCardActionArea);
+
+function AddMiniTable({table}) {
+
+  return (
+    <Grid item>
+      <CardActionArea>
+        <Card style={style.card}>
+          <AddCircleOutline style={style.icon} color="action" fontSize="large"/>
+          <Typography variant="body1" style={style.text}>Añadir tabla</Typography>
+        </Card>
+      </CardActionArea>
+    </Grid>
+  )
+}
+
+export default React.memo(AddMiniTable);

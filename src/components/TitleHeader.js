@@ -28,8 +28,6 @@ const style = {
 function TitleHeader() {
   const classes = useStyles();
 
-  console.log(classes);
-
   return (
     <Card className={classes.root}>
       <CardMedia

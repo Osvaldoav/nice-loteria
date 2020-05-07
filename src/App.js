@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="App" style={{backgroundImage: `url(${backImg})`, height: '100vh'}}>
-    {/* // <div className="App" style={{backgroundColor: '#FFD6DF', height: '100vh'}}> */}
+       {/* <div className="App" style={{backgroundColor: '#15243D', height: '100vh'}}>  */}
       {/* {tables.map(table => {
         return <Table key={table.id} table={table}/>
       })} */}

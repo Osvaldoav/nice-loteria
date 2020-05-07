@@ -17,9 +17,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Get all existing tables documents
+// Get all existing table documents
 export const getTables = () => {
   return db.collection('tables').get();
+};
+
+// Get all existing user documents
+export const getUsers = () => {
+  return db.collection('users').get();
 };
 
 // Creates a new table document
