@@ -3,6 +3,7 @@ import {CssBaseline, Container, Card} from '@material-ui/core';
 import TitleHeader from '../components/TitleHeader';
 import ParticipantFormController from '../components/ParticipantFormController';
 import Table from '../components/Table';
+import CustomizedDialogs from '../components/TableDialog';
 
 const table = {
   cards: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
@@ -26,9 +27,9 @@ function Admin() {
         <Card style={style.cardContainer}>
           <ParticipantFormController/>
         </Card>
-        <Card style={style.cardContainer}>
+        {/* <Card style={style.cardContainer}>
           <Table table={table}/>
-        </Card>
+        </Card> */}
       </Container>
     </Fragment>
   )

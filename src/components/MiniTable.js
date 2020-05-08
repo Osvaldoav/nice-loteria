@@ -24,11 +24,11 @@ const CardActionArea = withStyles({
   }
 })(MuiCardActionArea);
 
-function MiniTable({table}) {
+function MiniTable({table, handleClick}) {
   const cards = table.cards;
 
   return (
-    <Grid item>
+    <Grid item onClick={() => handleClick()}>
       <CardActionArea>
         <Card>
           <Box>
@@ -55,9 +55,9 @@ function MiniTable({table}) {
             <img src={require(`../images/cards/${cards[14]}.jpg`)} alt={alts[cards[14]]} style={style.miniCard}/>
             <img src={require(`../images/cards/${cards[15]}.jpg`)} alt={alts[cards[15]]} style={style.miniCard}/>
           </Box>
-          <Typography variant="body1">Tabla {table.id}</Typography>
         </Card>
       </CardActionArea>
+      <Typography variant="body1" style={{marginTop: '4px'}}>#{table.id}</Typography>
     </Grid>
   )
 }

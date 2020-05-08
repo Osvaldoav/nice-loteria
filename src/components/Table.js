@@ -52,7 +52,7 @@ const style = {
 
 
 
-function Table({table}) {
+function Table({table, disabled}) {
   const cards = table.cards;
 
   const [selected, setSelected] = useState(initialSelectedState);
@@ -70,58 +70,58 @@ function Table({table}) {
         <Typography varian="h6" style={style.title}>#{table.id} </Typography>
       </div>
       <div style={style.row}>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[0]}`}} onClick={() => setSelected({...selected, 0: !selected[0]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[0]}`}} onClick={() => setSelected({...selected, 0: !selected[0]})} disabled={disabled}>
           {selected[0] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[1]}`}} onClick={() => setSelected({...selected, 1: !selected[1]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[1]}`}} onClick={() => setSelected({...selected, 1: !selected[1]})} disabled={disabled}>
           {selected[1] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[2]}`}} onClick={() => setSelected({...selected, 2: !selected[2]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[2]}`}} onClick={() => setSelected({...selected, 2: !selected[2]})} disabled={disabled}>
           {selected[2] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[3]}`}} onClick={() => setSelected({...selected, 3: !selected[3]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[3]}`}} onClick={() => setSelected({...selected, 3: !selected[3]})} disabled={disabled}>
           {selected[3] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
       </div>
       <div style={style.row}>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[4]}`}} onClick={() => setSelected({...selected, 4: !selected[4]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[4]}`}} onClick={() => setSelected({...selected, 4: !selected[4]})} disabled={disabled}>
           {selected[4] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[5]}`}} onClick={() => setSelected({...selected, 5: !selected[5]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[5]}`}} onClick={() => setSelected({...selected, 5: !selected[5]})} disabled={disabled}>
           {selected[5] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[6]}`}} onClick={() => setSelected({...selected, 6: !selected[6]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[6]}`}} onClick={() => setSelected({...selected, 6: !selected[6]})} disabled={disabled}>
           {selected[6] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[7]}`}} onClick={() => setSelected({...selected, 7: !selected[7]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[7]}`}} onClick={() => setSelected({...selected, 7: !selected[7]})} disabled={disabled}>
           {selected[7] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
       </div>
       <div style={style.row}>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[8]}`}} onClick={() => setSelected({...selected, 8: !selected[8]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[8]}`}} onClick={() => setSelected({...selected, 8: !selected[8]})} disabled={disabled}>
           {selected[8] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[9]}`}} onClick={() => setSelected({...selected, 9: !selected[9]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[9]}`}} onClick={() => setSelected({...selected, 9: !selected[9]})} disabled={disabled}>
           {selected[9] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[10]}`}} onClick={() => setSelected({...selected, 10: !selected[10]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[10]}`}} onClick={() => setSelected({...selected, 10: !selected[10]})} disabled={disabled}>
           {selected[10] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[11]}`}} onClick={() => setSelected({...selected, 11: !selected[11]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[11]}`}} onClick={() => setSelected({...selected, 11: !selected[11]})} disabled={disabled}>
           {selected[11] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
       </div>
       <div style={style.row}>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[12]}`}} onClick={() => setSelected({...selected, 12: !selected[12]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[12]}`}} onClick={() => setSelected({...selected, 12: !selected[12]})} disabled={disabled}>
           {selected[12] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[13]}`}} onClick={() => setSelected({...selected, 13: !selected[13]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[13]}`}} onClick={() => setSelected({...selected, 13: !selected[13]})} disabled={disabled}>
           {selected[13] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[14]}`}} onClick={() => setSelected({...selected, 14: !selected[14]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[14]}`}} onClick={() => setSelected({...selected, 14: !selected[14]})} disabled={disabled}>
           {selected[14] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
-        <CardActionArea style={{...style.card, backgroundImage: `url(${images[15]}`}} onClick={() => setSelected({...selected, 15: !selected[15]})}>
+        <CardActionArea style={{...style.card, backgroundImage: `url(${images[15]}`}} onClick={() => setSelected({...selected, 15: !selected[15]})} disabled={disabled}>
           {selected[15] ? <div style={style.cardContent}/> : null}
         </CardActionArea>
       </div>  

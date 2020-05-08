@@ -20,8 +20,8 @@ const style = {
 const CardActionArea = withStyles({
   root: {
     width: '112px',
-    height: '100%',
-    minHeight: '180px'
+    height: '80%',
+    minHeight: '172px'
   }
 })(MuiCardActionArea);
 

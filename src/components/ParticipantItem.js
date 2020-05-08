@@ -8,6 +8,7 @@ import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import MiniTable from './MiniTable';
 import AddMiniTable from './AddMiniTable';
+import TableDialog from './TableDialog';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -67,35 +68,39 @@ const table = {
 function ParticipantItem({user, expand, onSelect}) {
   const [expanded, setExpanded] = useState('');
   const [hovered, setHovered] = useState('');
+  const [openTableDialog, setOpenTableDialog] = useState(false);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
   return (
-    <ExpansionPanel square expanded={expand} onChange={onSelect(user.id)}>
-      <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onMouseEnter={() => setHovered(user.id)} onMouseLeave={() => setHovered('')}>
-        <Typography>{user.name}</Typography>
-        <Fade in={hovered === user.id} timeout={100}>
-          <Box>
-            <IconButton>
-              <Edit/>
-            </IconButton>
-            <IconButton>
-              <Delete/>
-            </IconButton>
-          </Box> 
-        </Fade>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Grid container style={{flexGrow: 1}} spacing={4}>
-          <MiniTable table={table}/>
-          <MiniTable table={table}/>
-          <MiniTable table={table}/>
-          <AddMiniTable/>
-        </Grid>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    <div>
+      <ExpansionPanel square expanded={expand} onChange={onSelect(user.id)}>
+        <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onMouseEnter={() => setHovered(user.id)} onMouseLeave={() => setHovered('')}>
+          <Typography>{user.name}</Typography>
+          <Fade in={hovered === user.id} timeout={100}>
+            <Box>
+              <IconButton>
+                <Edit/>
+              </IconButton>
+              <IconButton>
+                <Delete/>
+              </IconButton>
+            </Box> 
+          </Fade>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Grid container style={{flexGrow: 1}} spacing={4}>
+            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
+            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
+            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
+            <AddMiniTable/>
+          </Grid>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <TableDialog open={openTableDialog} handleClose={() => setOpenTableDialog(false)}/>
+    </div>
   );
 }
 
