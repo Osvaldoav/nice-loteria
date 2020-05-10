@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import ParticipantItem from './ParticipantItem';
+import UserItem from './UserItem';
 import {getUsers} from '../services/firestore';
 
-export default function ParticipantList() {
+export default function UserList () {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState('');
   
@@ -28,7 +28,7 @@ export default function ParticipantList() {
   return (
     <div style={{marginTop: '10px'}}>
       {users.map(user => {
-        return <ParticipantItem user={user} key={user.id} onSelect={onSelect} expand={user.id === selected}/>
+        return <UserItem user={user} key={user.id} onSelect={onSelect} expand={user.id === selected}/>
       })}
     </div>
   );

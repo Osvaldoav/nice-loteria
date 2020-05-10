@@ -25,14 +25,14 @@ const CardActionArea = withStyles({
   }
 })(MuiCardActionArea);
 
-function AddMiniTable({table}) {
+function AddMiniTable({table, handleClick}) {
 
   return (
     <Grid item>
-      <CardActionArea>
+      <CardActionArea onClick={handleClick}>
         <Card style={style.card}>
           <AddCircleOutline style={style.icon} color="action" fontSize="large"/>
-          <Typography variant="body1" style={style.text}>Añadir tabla</Typography>
+          <Typography variant="body1" style={style.text}>Añadir Carta</Typography>
         </Card>
       </CardActionArea>
     </Grid>

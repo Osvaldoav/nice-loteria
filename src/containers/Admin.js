@@ -1,14 +1,10 @@
-import React, {Fragment} from 'react';
+import React, {useState, useEffect} from 'react';
 import {CssBaseline, Container, Card} from '@material-ui/core';
+import * as firestore from '../services/firestore';
 import TitleHeader from '../components/TitleHeader';
-import ParticipantFormController from '../components/ParticipantFormController';
-import Table from '../components/Table';
-import CustomizedDialogs from '../components/TableDialog';
+import UserSection from '../components/UserSection';
 
-const table = {
-  cards: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-  id: "00"
-};
+export const TablesContext = React.createContext();
 
 const style = {
   cardContainer: {
@@ -19,19 +15,32 @@ const style = {
 };
 
 function Admin() {
+  const [tables, setTables] = useState([]);
+  useEffect(() => {
+    console.log('effect hook tables');
+    firestore.getTables()
+    .then((snapshot) => {
+      let data = [];
+      snapshot.forEach(doc => {
+        data.push({...doc.data(), id: doc.id});
+      });
+      setTables(data);
+    })
+    .catch(err => {
+      console.log('Error getting table documents', err);
+    })
+  },[]);
+
   return (
-    <Fragment>
-      <CssBaseline />
+    <TablesContext.Provider value={tables}>
+      {/* <CssBaseline /> */}
       <Container maxWidth="md">
         <TitleHeader/>
         <Card style={style.cardContainer}>
-          <ParticipantFormController/>
+          <UserSection/>
         </Card>
-        {/* <Card style={style.cardContainer}>
-          <Table table={table}/>
-        </Card> */}
       </Container>
-    </Fragment>
+    </TablesContext.Provider>
   )
 }
 

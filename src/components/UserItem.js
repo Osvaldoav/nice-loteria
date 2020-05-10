@@ -9,6 +9,8 @@ import Delete from '@material-ui/icons/Delete';
 import MiniTable from './MiniTable';
 import AddMiniTable from './AddMiniTable';
 import TableDialog from './TableDialog';
+import ChangeUserDialog from './ChangeUserDialog';
+import AddTableDialog from './AddTableDialog';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -65,10 +67,12 @@ const table = {
   id: "00"
 };
 
-function ParticipantItem({user, expand, onSelect}) {
+function UserItem({user, expand, onSelect}) {
   const [expanded, setExpanded] = useState('');
   const [hovered, setHovered] = useState('');
   const [openTableDialog, setOpenTableDialog] = useState(false);
+  const [openUserDialog, setUserDialog] = useState(false);
+  const [openAddTableDialog, setOpenAddTableDialog] = useState(false);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -81,7 +85,7 @@ function ParticipantItem({user, expand, onSelect}) {
           <Typography>{user.name}</Typography>
           <Fade in={hovered === user.id} timeout={100}>
             <Box>
-              <IconButton>
+              <IconButton onClick={(e) => {e.stopPropagation();setUserDialog(true)}}>
                 <Edit/>
               </IconButton>
               <IconButton>
@@ -95,13 +99,15 @@ function ParticipantItem({user, expand, onSelect}) {
             <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
             <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
             <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
-            <AddMiniTable/>
+            <AddMiniTable handleClick={() => setOpenAddTableDialog(true)}/>
           </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <TableDialog open={openTableDialog} handleClose={() => setOpenTableDialog(false)}/>
+      <ChangeUserDialog open={openUserDialog} handleClose={() => setUserDialog(false)} user={user}/>
+      <AddTableDialog open={openAddTableDialog} handleClose={() => setOpenAddTableDialog(false)}/>
     </div>
   );
 }
 
-export default ParticipantItem;
+export default UserItem;

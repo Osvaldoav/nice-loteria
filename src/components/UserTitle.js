@@ -1,15 +1,10 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 import {Typography, Divider, IconButton, Box} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
 import Delete from '@material-ui/icons/Delete';
-import ParticipantList from './ParticipantList';
+import AddUserDialog from './AddUserDialog';
 
 const style = {
-  cardContainer: {
-    marginTop: '20px', 
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: '10px'
-  },
   sectionTitle: {
     display: 'flex', 
     flexDirection: 'row', 
@@ -18,7 +13,9 @@ const style = {
   }
 };
 
-function ParticipantFormController() {
+function UserTitle() {
+  const [openUserDialog, setOpenUserDialog] = useState(false);
+
   return (
     <Fragment>
       <Box style={style.sectionTitle}>
@@ -26,7 +23,7 @@ function ParticipantFormController() {
           Participantes
         </Typography>
         <Box>
-          <IconButton>
+          <IconButton onClick={() => setOpenUserDialog(true)}>
             <Add/>
           </IconButton>
           <IconButton>
@@ -35,9 +32,9 @@ function ParticipantFormController() {
         </Box>
       </Box>
       <Divider/>
-      <ParticipantList/>
+      <AddUserDialog open={openUserDialog} handleClose={() => setOpenUserDialog(false)}/>
     </Fragment>
   )
 }
 
-export default ParticipantFormController;
+export default UserTitle;
