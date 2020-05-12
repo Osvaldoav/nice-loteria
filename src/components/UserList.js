@@ -12,17 +12,17 @@ function UserList () {
 
   useEffect(() => {
     console.log('effect hook users');
-    firestore.getUsers()
-    .then((snapshot) => {
-      let data = [];
-      snapshot.forEach(doc => {
-        data.push({...doc.data(), id: doc.id});
-      });
-      setUsers(data);
+    const unsubscribe = firestore.streamUsers({
+      next: (snapshot) => {
+        let data = [];
+        snapshot.forEach(doc => {
+          data.push({...doc.data(), id: doc.id});
+        });
+        setUsers(data);
+      },
+      error: err => console.log('Error getting table documents', err)
     })
-    .catch(err => {
-      console.log('Error getting table documents', err);
-    })
+    return unsubscribe;
   },[]);
 
   return (
