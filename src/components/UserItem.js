@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import * as firestore from '../services/firestore';
+import {Typography, IconButton, Box, Fade, Grid} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import {Edit, Delete} from '@material-ui/icons';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import {Typography, IconButton, Box, Fade, Grid} from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
-import Delete from '@material-ui/icons/Delete';
 import MiniTable from './MiniTable';
 import AddMiniTable from './AddMiniTable';
 import TableDialog from './TableDialog';
@@ -15,7 +14,6 @@ import AddTableDialog from './AddTableDialog';
 
 const ExpansionPanel = withStyles({
   root: {
-    // borderBottom: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
     '&:not(:last-child)': {
       borderBottom: 0,
@@ -32,7 +30,6 @@ const ExpansionPanel = withStyles({
 
 const ExpansionPanelSummary = withStyles({
   root: {
-    // backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     margin: 0,
     minHeight: 56,
@@ -63,21 +60,35 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
+const userReducer = (state, action) => {
+  switch(action.type){
+    case 'ADD_TABLE':
+      return {...state, table_ids: [...state.table_ids, action.payload]};
+    case 'DELETE_TABLE':
+      const table_ids = state.table_ids;
+      table_ids.splice(table_ids.indexOf(action.payload), 1);
+      return {...state, table_ids: table_ids};
+    default:
+      return state;
+  }
+};
+
 function UserItem({userData, expand, onSelect}) {
+  const [user, setUser] = useState(userData);
+  const [nextUser, dispatchNextUser] = useReducer(userReducer, {name: userData.name, table_ids: userData.table_ids});
+  const [tables, setTables] = useState([]);
+  const [selectedTable, setSelectedTable] = useState(null);
+  
   const [hovered, setHovered] = useState('');
   const [openTableDialog, setOpenTableDialog] = useState(false);
   const [openUserDialog, setUserDialog] = useState(false);
   const [openAddTableDialog, setOpenAddTableDialog] = useState(false);
-
-  const [selectedTable, setSelectedTable] = useState(null);
-
-  const [user, setUser] = useState(userData);
-  const [tables, setTables] = useState([]);
+  
+  // Firestore real-time listener for user document
   useEffect(() => {
     console.log('streamTablesWithUserID hook');
     const unsubscribe = firestore.streamTablesWithUserID(user.id, {
       next: snapshot => {
-        console.log('received new data from streamtableswithuserid');
         let data = [];
         snapshot.forEach(doc => {
           data.push({...doc.data(), id: doc.id});
@@ -89,38 +100,23 @@ function UserItem({userData, expand, onSelect}) {
     return unsubscribe;
   },[user.id]);
 
-  const handleAddTable = (table) => {
-    const userData = {...user, table_ids: [...user.table_ids, table]};
-    firestore.updateUser(user.id, userData)
+  // Update firestore user
+  useEffect(() => {
+    firestore.updateUser(user.id, nextUser)
     .then(() => {
       console.log('user updated succesfully');
-      setUser(userData);
+      setUser(prevUser => ({...prevUser, ...nextUser}));
     })
     .catch(err =>{
       console.log('error updating user', err);
     });
-  };
-
-  const handleRemoveTable = (table) => {
-    const table_ids = user.table_ids;
-    table_ids.splice(table_ids.indexOf(table), 1);
-    const userData = {...user, table_ids: table_ids};
-    console.log(userData);
-    firestore.updateUser(user.id, userData)
-    .then(() => {
-      console.log('user updated succesfully');
-      setUser(userData);
-    })
-    .catch(err =>{
-      console.log('error updating user', err);
-    });
-  };
+  }, [nextUser, user.id]);
 
   return ( 
     user ?
     <div>
       <ExpansionPanel square expanded={expand} onChange={onSelect(user.id)}>
-        <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onMouseEnter={() => setHovered(user.id)} onMouseLeave={() => setHovered('')}>
+        <ExpansionPanelSummary onMouseEnter={() => setHovered(user.id)} onMouseLeave={() => setHovered('')}>
           <Typography>{user.name}</Typography>
           <Fade in={hovered === user.id} timeout={100}>
             <Box>
@@ -135,14 +131,42 @@ function UserItem({userData, expand, onSelect}) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container style={{flexGrow: 1}} spacing={4}>
-            {tables.map(table => <MiniTable table={table} handleClick={() => {setSelectedTable(table);setOpenTableDialog(true)}} key={table.id}/>)}
+              { 
+                tables.map(table => {
+                  return (
+                    <MiniTable 
+                      key={table.id}
+                      table={table} 
+                      handleClick={() => {
+                        setSelectedTable(table);
+                        setOpenTableDialog(true)
+                      }} 
+                    />)
+                  })
+              }
             <AddMiniTable handleClick={() => setOpenAddTableDialog(true)}/>
           </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <TableDialog open={openTableDialog} handleClose={() => setOpenTableDialog(false)} handleRemoveTable={handleRemoveTable} table={selectedTable}/>
-      <ChangeUserDialog open={openUserDialog} handleClose={() => setUserDialog(false)} user={user}/>
-      <AddTableDialog open={openAddTableDialog} handleClose={() => setOpenAddTableDialog(false)} handleAddTable={handleAddTable}/>
+
+      <TableDialog 
+        table={selectedTable}
+        open={openTableDialog} 
+        handleClose={() => setOpenTableDialog(false)} 
+        handleRemoveTable={(table) => dispatchNextUser({type: 'DELETE_TABLE', payload: table})} 
+      />
+
+      <ChangeUserDialog 
+        open={openUserDialog} 
+        handleClose={() => setUserDialog(false)} 
+        user={user}
+      />
+
+      <AddTableDialog 
+        open={openAddTableDialog} 
+        handleClose={() => setOpenAddTableDialog(false)} 
+        handleAddTable={(table) => dispatchNextUser({type: 'ADD_TABLE', payload: table})}
+      />
     </div>
     : null
   );
