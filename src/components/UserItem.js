@@ -68,6 +68,8 @@ const userReducer = (state, action) => {
       const table_ids = state.table_ids;
       table_ids.splice(table_ids.indexOf(action.payload), 1);
       return {...state, table_ids: table_ids};
+    case 'UPDATE_USER_NAME':
+      return {...state, name: action.payload};
     default:
       return state;
   }
@@ -157,9 +159,10 @@ function UserItem({userData, expand, onSelect}) {
       />
 
       <ChangeUserDialog 
+        user={user}
         open={openUserDialog} 
         handleClose={() => setUserDialog(false)} 
-        user={user}
+        handleUpdateUser={(name) => dispatchNextUser({type: 'UPDATE_USER_NAME', payload: name})}
       />
 
       <AddTableDialog 

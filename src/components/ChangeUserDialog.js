@@ -4,14 +4,24 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function ChangeUserDialog({open, handleClose, user}) {
+export default function ChangeUserDialog({open, handleClose, user, handleUpdateUser}) {
   const [userName, setUserName] = React.useState(user.name);
+  const [currentUserName, setCurrentUserName] = React.useState(user.name);
+
+  const handleClick = () => {
+    handleClose();
+    handleUpdateUser(userName);
+  };
+
+  const handleOnClose = () => {
+    handleClose();
+    setUserName(user.name);
+  }
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+    <Dialog open={open} onClose={handleOnClose}>
       <DialogTitle id="form-dialog-title" style={{paddingBottom: 0}}>Editar Participante</DialogTitle>
       <DialogContent>
         <div style={{width: '500px', height: 0}}/>
@@ -27,7 +37,7 @@ export default function ChangeUserDialog({open, handleClose, user}) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary" variant="contained">
+        <Button onClick={handleClick} color="primary" variant="contained">
           Guardar
         </Button>
       </DialogActions>
