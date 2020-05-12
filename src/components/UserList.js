@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import UserItem from './UserItem';
-import {getUsers} from '../services/firestore';
+import * as firestore from '../services/firestore';
 
-export default function UserList () {
+function UserList () {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState('');
   
@@ -12,7 +12,7 @@ export default function UserList () {
 
   useEffect(() => {
     console.log('effect hook users');
-    getUsers()
+    firestore.getUsers()
     .then((snapshot) => {
       let data = [];
       snapshot.forEach(doc => {
@@ -28,8 +28,10 @@ export default function UserList () {
   return (
     <div style={{marginTop: '10px'}}>
       {users.map(user => {
-        return <UserItem user={user} key={user.id} onSelect={onSelect} expand={user.id === selected}/>
+        return <UserItem userData={user} key={user.id} onSelect={onSelect} expand={user.id === selected}/>
       })}
     </div>
   );
 }
+
+export default React.memo(UserList);

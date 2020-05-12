@@ -18,17 +18,18 @@ function Admin() {
   const [tables, setTables] = useState([]);
   useEffect(() => {
     console.log('effect hook tables');
-    firestore.getTables()
-    .then((snapshot) => {
-      let data = [];
-      snapshot.forEach(doc => {
-        data.push({...doc.data(), id: doc.id});
-      });
-      setTables(data);
+    const unsubscribe = firestore.streamTablesWithNoUserID({
+      next: snapshot => {
+        let data = [];
+        snapshot.forEach(doc => {
+          data.push({...doc.data(), id: doc.id});
+        });
+        setTables(data);
+      },
+      error: err => console.log('Error getting table documents with no user id', err)
     })
-    .catch(err => {
-      console.log('Error getting table documents', err);
-    })
+
+    return unsubscribe;
   },[]);
 
   return (

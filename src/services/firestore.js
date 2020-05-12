@@ -16,15 +16,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Get all existing table documents
-export const getTables = () => {
-  return db.collection('tables').get();
-};
-
-// Get all existing user documents
+// Get all existing users
 export const getUsers = () => {
   return db.collection('users').get();
 };
+
+export const updateUser = (user, data) => {
+  return db.collection('users').doc(user).update(data);
+};
+
+// Get all existing tables with no user id assigned
+export const streamTablesWithNoUserID = (observer) => {
+  return db.collection('tables').where('user_id', "==", "").onSnapshot(observer);
+};
+
+// Get all existing tables with a specific user id
+export const streamTablesWithUserID = (id, observer) => {
+  return db.collection('tables').where('user_id', '==', id).onSnapshot(observer);
+}
 
 // Creates a new table document
 export const createTable = (data, id) => {

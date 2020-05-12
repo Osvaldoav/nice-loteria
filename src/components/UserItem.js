@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -62,23 +63,61 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const table = {
-  cards: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-  id: "00"
-};
-
-function UserItem({user, expand, onSelect}) {
-  const [expanded, setExpanded] = useState('');
+function UserItem({userData, expand, onSelect}) {
   const [hovered, setHovered] = useState('');
   const [openTableDialog, setOpenTableDialog] = useState(false);
   const [openUserDialog, setUserDialog] = useState(false);
   const [openAddTableDialog, setOpenAddTableDialog] = useState(false);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+  const [selectedTable, setSelectedTable] = useState(null);
+
+  const [user, setUser] = useState(userData);
+  const [tables, setTables] = useState([]);
+  useEffect(() => {
+    console.log('streamTablesWithUserID hook');
+    const unsubscribe = firestore.streamTablesWithUserID(user.id, {
+      next: snapshot => {
+        console.log('received new data from streamtableswithuserid');
+        let data = [];
+        snapshot.forEach(doc => {
+          data.push({...doc.data(), id: doc.id});
+        })
+        setTables(data);
+      },
+      error: err => console.log('Error getting table document with user id', err)
+    })
+    return unsubscribe;
+  },[user.id]);
+
+  const handleAddTable = (table) => {
+    const userData = {...user, table_ids: [...user.table_ids, table]};
+    firestore.updateUser(user.id, userData)
+    .then(() => {
+      console.log('user updated succesfully');
+      setUser(userData);
+    })
+    .catch(err =>{
+      console.log('error updating user', err);
+    });
   };
 
-  return (
+  const handleRemoveTable = (table) => {
+    const table_ids = user.table_ids;
+    table_ids.splice(table_ids.indexOf(table), 1);
+    const userData = {...user, table_ids: table_ids};
+    console.log(userData);
+    firestore.updateUser(user.id, userData)
+    .then(() => {
+      console.log('user updated succesfully');
+      setUser(userData);
+    })
+    .catch(err =>{
+      console.log('error updating user', err);
+    });
+  };
+
+  return ( 
+    user ?
     <div>
       <ExpansionPanel square expanded={expand} onChange={onSelect(user.id)}>
         <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onMouseEnter={() => setHovered(user.id)} onMouseLeave={() => setHovered('')}>
@@ -96,17 +135,16 @@ function UserItem({user, expand, onSelect}) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container style={{flexGrow: 1}} spacing={4}>
-            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
-            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
-            <MiniTable table={table} handleClick={() => setOpenTableDialog(true)}/>
+            {tables.map(table => <MiniTable table={table} handleClick={() => {setSelectedTable(table);setOpenTableDialog(true)}} key={table.id}/>)}
             <AddMiniTable handleClick={() => setOpenAddTableDialog(true)}/>
           </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <TableDialog open={openTableDialog} handleClose={() => setOpenTableDialog(false)}/>
+      <TableDialog open={openTableDialog} handleClose={() => setOpenTableDialog(false)} handleRemoveTable={handleRemoveTable} table={selectedTable}/>
       <ChangeUserDialog open={openUserDialog} handleClose={() => setUserDialog(false)} user={user}/>
-      <AddTableDialog open={openAddTableDialog} handleClose={() => setOpenAddTableDialog(false)}/>
+      <AddTableDialog open={openAddTableDialog} handleClose={() => setOpenAddTableDialog(false)} handleAddTable={handleAddTable}/>
     </div>
+    : null
   );
 }
 
