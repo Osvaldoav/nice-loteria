@@ -36,8 +36,14 @@ export const updateUser = (user, data) => {
   return db.collection('users').doc(user).update(data);
 };
 
+// Create new user
 export const createUser = (user) => {
   return db.collection('users').add(user);
+}
+
+// Delete new user
+export const deleteUser = (userID) => {
+  return db.collection('users').doc(userID).delete();
 }
 
 // Creates a new table document

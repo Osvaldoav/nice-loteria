@@ -125,7 +125,7 @@ function UserItem({userData, expand, onSelect}) {
               <IconButton onClick={(e) => {e.stopPropagation();setUserDialog(true)}}>
                 <Edit/>
               </IconButton>
-              <IconButton>
+              <IconButton onClick={(e) => {e.stopPropagation();firestore.deleteUser(user.id)}}>
                 <Delete/>
               </IconButton>
             </Box> 

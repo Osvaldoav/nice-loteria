@@ -5,36 +5,46 @@ admin.initializeApp();
 const db = admin.firestore();
 
 export const onUserChange = functions.firestore
-  .document('users/{user}')
-  .onUpdate(change => {
-    const before = change.before.data();
-    const after = change.after.data();
-    const batch = db.batch();
-    let addedTableIds = [];
-    let removedTableIds = [];
-    
-    if(before && after){
-      addedTableIds = after.table_ids.filter((tableId : string) => !before.table_ids.includes(tableId));
-      removedTableIds = before.table_ids.filter((tableId : string) => !after.table_ids.includes(tableId));
-
-      addedTableIds.forEach((tableId : string) => {
-        const ref = db.collection('tables').doc(tableId);
-        batch.update(ref, {user_id: change.after.id});
-      });
+.document('users/{userID}')
+.onUpdate(change => {
+  const before = change.before.data();
+  const after = change.after.data();
+  const batch = db.batch();
+  let addedTableIds = [];
+  let removedTableIds = [];
   
-      removedTableIds.forEach((tableId : string) => {
-        const ref = db.collection('tables').doc(tableId);
-        batch.update(ref, {user_id: ""});
-      });
-    }
+  if(before && after){
+    addedTableIds = after.table_ids.filter((tableID : string) => !before.table_ids.includes(tableID));
+    removedTableIds = before.table_ids.filter((tableID : string) => !after.table_ids.includes(tableID));
 
-    return batch.commit();
-  })
+    addedTableIds.forEach((tableID : string) => {
+      const ref = db.collection('tables').doc(tableID);
+      batch.update(ref, {user_id: change.after.id});
+    });
 
+    removedTableIds.forEach((tableID : string) => {
+      const ref = db.collection('tables').doc(tableID);
+      batch.update(ref, {user_id: ""});
+    });
+  }
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+  return batch.commit();
+})
+
+export const onUserDelete = functions.firestore
+.document('users/{userID}')
+.onDelete(snapshot => {
+  const user = snapshot.data();
+  console.log(user);
+
+  const batch = db.batch();
+
+  if(user){
+    user.table_ids.forEach((tableID : string) => {
+      const ref = db.collection('tables').doc(tableID);
+      batch.update(ref, {user_id: ""});
+    });
+  }
+
+  return batch.commit();
+})
