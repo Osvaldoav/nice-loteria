@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
 import {Typography, Grid, TextField, IconButton} from '@material-ui/core';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -57,17 +58,30 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 
 function RoundItem({round, expand, onSelect}) {
   const [card, setCard] = useState('');
+  const [error, setError] = useState(false);
 
   const onChangeCard = (e) => {
     const val = e.target.value;
-
-    if(val === '' || (val <= 54 && val >= 1))
+    
+    if(val === '' || (val <= 54 && val >= 1)){
       setCard(val);
+      setError(round.cardList.includes(Number(val)));
+    }
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setCard('');
+
+    if(card !== '' && !error){
+      const roundData = {...round, cardList: [...round.cardList, Number(card)]};
+      delete roundData.id;
+      firestore.updateRound(round.id, roundData)
+      .then(() => {
+        setCard('');
+        console.log('card added round');
+      })
+      .catch(err => console.log('error adding card to round', err));
+    }
   }
 
   return (
@@ -89,6 +103,7 @@ function RoundItem({round, expand, onSelect}) {
             inputProps={{min: 0, style: { textAlign: 'center' }}}
             value={card}
             onChange={onChangeCard}
+            error={error}
           />
           <IconButton color="primary" type="submit">
             <Send fontSize="large"/>
