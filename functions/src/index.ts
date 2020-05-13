@@ -35,8 +35,6 @@ export const onUserDelete = functions.firestore
 .document('users/{userID}')
 .onDelete(snapshot => {
   const user = snapshot.data();
-  console.log(user);
-
   const batch = db.batch();
 
   if(user){
@@ -47,4 +45,13 @@ export const onUserDelete = functions.firestore
   }
 
   return batch.commit();
+})
+
+export const onRoundCreate = functions.firestore
+.document('rounds/{roundID}')
+.onCreate(snapshot => {
+  const round = snapshot.id;
+  const ref = db.collection('details').doc('currentInfo');
+
+  return ref.update({round: round});
 })

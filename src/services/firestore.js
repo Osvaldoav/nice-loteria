@@ -21,6 +21,11 @@ export const streamUsers = (observer) => {
   return db.collection('users').onSnapshot(observer);
 };
 
+// Get all existing users
+export const streamRounds = (observer) => {
+  return db.collection('rounds').onSnapshot(observer);
+};
+
 // Get all existing tables with no user id assigned
 export const streamTablesWithNoUserID = (observer) => {
   return db.collection('tables').where('user_id', "==", "").onSnapshot(observer);
@@ -29,16 +34,31 @@ export const streamTablesWithNoUserID = (observer) => {
 // Get all existing tables with a specific user id
 export const streamTablesWithUserID = (id, observer) => {
   return db.collection('tables').where('user_id', '==', id).onSnapshot(observer);
-}
+};
+
+// Get currentInfo document
+export const streamCurrentGameDetails = (observer) => {
+  return db.collection('details').doc('currentInfo').onSnapshot(observer);
+};
 
 // Update user document
 export const updateUser = (user, data) => {
   return db.collection('users').doc(user).update(data);
 };
 
+// Update user document
+export const updateRound = (round, data) => {
+  return db.collection('rounds').doc(round).update(data);
+};
+
 // Create new user
 export const createUser = (user) => {
   return db.collection('users').add(user);
+}
+
+// Create new round
+export const createRound = (round, data) => {
+  return db.collection('rounds').doc(round).set(data);
 }
 
 // Delete new user

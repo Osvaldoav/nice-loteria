@@ -175,4 +175,4 @@ function UserItem({userData, expand, onSelect}) {
   );
 }
 
-export default UserItem;
+export default React.memo(UserItem);

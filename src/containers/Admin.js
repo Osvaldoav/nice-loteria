@@ -4,6 +4,8 @@ import * as firestore from '../services/firestore';
 import TitleHeader from '../components/TitleHeader';
 import UserList from '../components/UserList';
 import UserTitle from '../components/UserTitle';
+import RoundsTitle from '../components/RoundsTitle';
+import RoundsList from '../components/RoundsList';
 
 export const TablesContext = React.createContext();
 
@@ -41,6 +43,10 @@ function Admin() {
         <Card style={style.cardContainer}>
           <UserTitle/>
           <UserList/>
+        </Card>
+        <Card style={style.cardContainer}>
+          <RoundsTitle/>
+          <RoundsList/>
         </Card>
       </Container>
     </TablesContext.Provider>

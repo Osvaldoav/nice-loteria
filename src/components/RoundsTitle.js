@@ -1,8 +1,8 @@
 import React, {Fragment, useState} from 'react';
 import {Typography, Divider, IconButton, Box} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
-import Delete from '@material-ui/icons/Delete';
-import AddUserDialog from './AddUserDialog';
+import Refresh from '@material-ui/icons/Refresh';
+import AddRoundDialog from './AddRoundDialog';
 
 const style = {
   sectionTitle: {
@@ -14,25 +14,28 @@ const style = {
   }
 };
 
-function UserTitle() {
+function RoundsTitle() {
   const [openUserDialog, setOpenUserDialog] = useState(false);
 
   return (
     <Fragment>
       <Box style={style.sectionTitle}>
         <Typography variant="h6" align="left">
-          Participantes
+          Rondas
         </Typography>
         <Box>
           <IconButton onClick={() => setOpenUserDialog(true)}>
             <Add/>
           </IconButton>
+          <IconButton>
+            <Refresh/>
+          </IconButton>
         </Box>
       </Box>
       <Divider/>
-      <AddUserDialog open={openUserDialog} handleClose={() => setOpenUserDialog(false)}/>
+      <AddRoundDialog open={openUserDialog} handleClose={() => setOpenUserDialog(false)}/>
     </Fragment>
   )
 }
 
-export default UserTitle;
+export default RoundsTitle;

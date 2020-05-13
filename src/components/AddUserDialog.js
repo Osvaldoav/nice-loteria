@@ -15,10 +15,12 @@ export default function AddUserDialog({open, handleClose}) {
 
   const handleClick = () => {
     firestore.createUser({name: userName, table_ids: []})
-    .then( () => console.log('user added successfully'))
+    .then( () => {
+      setUserName('');
+      handleClose();
+      console.log('user added successfully')
+    })
     .catch(err => console.log('error adding a new user', err));
-    setUserName('');
-    handleClose();
   };
 
   const handleOnClose = () => {
