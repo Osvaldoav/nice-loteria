@@ -26,9 +26,6 @@ function UserTitle() {
           <IconButton onClick={() => setOpenUserDialog(true)}>
             <Add/>
           </IconButton>
-          <IconButton>
-            <Delete/>
-          </IconButton>
         </Box>
       </Box>
       <Divider/>

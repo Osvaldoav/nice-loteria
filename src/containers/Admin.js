@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {CssBaseline, Container, Card} from '@material-ui/core';
 import * as firestore from '../services/firestore';
 import TitleHeader from '../components/TitleHeader';
-import UserSection from '../components/UserSection';
+import UserList from '../components/UserList';
+import UserTitle from '../components/UserTitle';
 
 export const TablesContext = React.createContext();
 
@@ -38,7 +39,8 @@ function Admin() {
       <Container maxWidth="md">
         <TitleHeader/>
         <Card style={style.cardContainer}>
-          <UserSection/>
+          <UserTitle/>
+          <UserList/>
         </Card>
       </Container>
     </TablesContext.Provider>
