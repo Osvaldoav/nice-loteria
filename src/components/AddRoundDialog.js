@@ -85,6 +85,7 @@ export default function AddRoundDialog({open, handleClose, handleAddTable}) {
       const data = {
         cardList: [],
         prize: prize,
+        status: "active",
         winCondition: selectedPlay,
         winners: []
       };
