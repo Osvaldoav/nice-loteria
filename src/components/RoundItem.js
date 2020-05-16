@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
-import {Typography, Grid, TextField, IconButton, GridListTile, GridList, Divider} from '@material-ui/core';
+import {Typography, Grid, TextField, IconButton, GridListTile, GridList, Divider, Button} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -67,8 +67,8 @@ function RoundItem({round, expand, onSelect}) {
   const xs = useMediaQuery('(max-width: 600px)');
   const md = useMediaQuery('(min-width: 601px) and (max-width: 900px)');
 
-  const listWidthStyle = xs ? {width: '400px'} : md ? {width: '500px'} : {width: '850px'};
-  const listCols= xs ? 6 : md ? 8 : 13;
+  const listWidthStyle = xs ? {width: '300px'} : md ? {width: '500px'} : {width: '850px'};
+  const listCols= xs ? 4 : md ? 8 : 13;
 
   const onChangeCard = (e) => {
     const val = e.target.value;
@@ -83,7 +83,7 @@ function RoundItem({round, expand, onSelect}) {
     e.preventDefault();
 
     if(card !== '' && !error){
-      const roundData = {...round, cardList: [...round.cardList, Number(card)]};
+      const roundData = {cardList: [...round.cardList, Number(card)]};
       delete roundData.id;
       firestore.updateRound(round.id, roundData)
       .then(() => {
@@ -108,10 +108,21 @@ function RoundItem({round, expand, onSelect}) {
           round.status === 'finished' ? 
           <Typography variant="h6" style={{color: 'gray', fontWeight: 500}}>Ronda terminada</Typography>
           :
+          round.status === 'tie' ? 
           <Typography variant="h6" style={{color: 'red', fontWeight: 500}}>Empate</Typography>
+          :
+          <Typography variant="h6" style={{color: 'blue', fontWeight: 500}}>Desempate</Typography>
         }
-        <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Ganadores:</Typography>
         {
+          round.status === 'untie' ? 
+          <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Jugadores al desempate:</Typography>
+          :
+          <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Ganadores:</Typography>
+        }
+        {
+          round.status === 'untie' ? 
+          round.tiedList.map(tied => <Typography style={{color: 'green'}} key={tied.doc} align="left">{tied.user} con la carta {tied.doc}</Typography>)
+          :
           round.winners.map(winner => <Typography style={{color: 'green'}} key={winner.doc} align="left">{winner.user} con la carta {winner.doc}</Typography>)
         }
         <Divider style={{margin: '10px 0'}}/>
@@ -141,12 +152,33 @@ function RoundItem({round, expand, onSelect}) {
             value={card}
             onChange={onChangeCard}
             error={error}
-            disabled={round.status !== 'active'}
+            disabled={round.status !== 'active' && round.status !== 'untie'}
           />
-          <IconButton color="primary" type="submit" disabled={round.status !== 'active'}>
+          <IconButton color="primary" type="submit" disabled={round.status !== 'active' && round.status !== 'untie'}>
             <Send fontSize="large"/>
           </IconButton>
         </form>
+        <Divider style={{margin: '10px 0'}}/>
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}> 
+          <Button 
+            variant="contained" 
+            color="primary" 
+            style={{margin: '0 5px'}} 
+            disabled={round.status !== 'tie'}
+            onClick={() => {firestore.updateRound(round.id, {cardList: [], status: 'untie', tiedList: round.winners, winners: []})}}
+          >
+           Desempate
+          </Button>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            style={{margin: '0 5px'}} 
+            disabled={round.status !== 'tie'}
+            onClick={() => {firestore.updateRound(round.id, {status: 'finished'})}}
+          >
+           Terminar
+          </Button>
+        </div>
       </Grid>
     </ExpansionPanelDetails>
   </ExpansionPanel>

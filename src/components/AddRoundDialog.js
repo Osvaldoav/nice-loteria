@@ -87,6 +87,7 @@ export default function AddRoundDialog({open, handleClose, handleAddTable}) {
         prize: prize,
         status: "active",
         winCondition: selectedPlay,
+        tiedList: [],
         winners: []
       };
 

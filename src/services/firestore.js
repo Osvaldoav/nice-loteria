@@ -46,7 +46,7 @@ export const updateUser = (user, data) => {
   return db.collection('users').doc(user).update(data);
 };
 
-// Update user document
+// Update round document
 export const updateRound = (round, data) => {
   return db.collection('rounds').doc(round).update(data);
 };
