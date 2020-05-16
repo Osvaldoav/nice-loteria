@@ -26,6 +26,11 @@ export const streamRounds = (observer) => {
   return db.collection('rounds').onSnapshot(observer);
 };
 
+// Get around with id
+export const streamRoundWithID = (id, observer) => {
+  return db.collection('rounds').doc(id).onSnapshot(observer);
+};
+
 // Get all existing tables with no user id assigned
 export const streamTablesWithNoUserID = (observer) => {
   return db.collection('tables').where('user_id', "==", "").onSnapshot(observer);

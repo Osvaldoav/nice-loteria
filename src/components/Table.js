@@ -18,8 +18,8 @@ const style = {
     flexDirection: 'row'
   },
   card: {
-    width: '99px',
-    height: '155px',
+    width: '74px',
+    height: '116px',
     margin: '3px',
     border: '1px solid black',
     backgroundSize: 'cover',

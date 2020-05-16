@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
 import {Typography, Grid, TextField, IconButton, GridListTile, GridList, Divider, Button} from '@material-ui/core';
@@ -95,93 +95,95 @@ function RoundItem({round, expand, onSelect}) {
   }
 
   return (
-    <ExpansionPanel square expanded={expand} onChange={onSelect(round.id)}>
-    <ExpansionPanelSummary>
-      <Typography>Ronda {round.id}</Typography>
-    </ExpansionPanelSummary>
-    <ExpansionPanelDetails>
-      <Grid container style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, padding: '10px'}} spacing={4}>
-        {
-          round.status === 'active' ? 
-          <Typography variant="h6" style={{color: 'green', fontWeight: 500}}>Ronda activa</Typography>
-          :
-          round.status === 'finished' ? 
-          <Typography variant="h6" style={{color: 'gray', fontWeight: 500}}>Ronda terminada</Typography>
-          :
-          round.status === 'tie' ? 
-          <Typography variant="h6" style={{color: 'red', fontWeight: 500}}>Empate</Typography>
-          :
-          <Typography variant="h6" style={{color: 'blue', fontWeight: 500}}>Desempate</Typography>
-        }
-        {
-          round.status === 'untie' ? 
-          <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Jugadores al desempate:</Typography>
-          :
-          <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Ganadores:</Typography>
-        }
-        {
-          round.status === 'untie' ? 
-          round.tiedList.map(tied => <Typography style={{color: 'green'}} key={tied.doc} align="left">{tied.user} con la carta {tied.doc}</Typography>)
-          :
-          round.winners.map(winner => <Typography style={{color: 'green'}} key={winner.doc} align="left">{winner.user} con la carta {winner.doc}</Typography>)
-        }
-        <Divider style={{margin: '10px 0'}}/>
-        <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Premio:</Typography>
-        <Typography style={{color: 'green'}} align="left">{round.prize}</Typography>
-        <Divider style={{margin: '10px 0'}}/>
-        <Typography variant="subtitle1" align="left" style={{fontWeight: 500}}>Lista de Cartas</Typography>
-        <GridList cellHeight="auto" cols={listCols} style={{...listWidthStyle, flexWrap: 'nowrap', transform: 'translateZ(0)'}}>
-          {round.cardList.slice(0).reverse().map(card => (
-            <GridListTile key={card}>
-              <MiniCardListItem card={card}/>
-            </GridListTile>
-          )
-          )}
-        </GridList>
-        <Divider style={{margin: '10px 0'}}/>
-        <MiniCard card={card}/>
-        <form onSubmit={onSubmit} style={{marginLeft: '45px'}}>
-          <TextField
-            label="Carta"
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
-            inputProps={{min: 0, style: { textAlign: 'center' }}}
-            value={card}
-            onChange={onChangeCard}
-            error={error}
-            disabled={round.status !== 'active' && round.status !== 'untie'}
-          />
-          <IconButton color="primary" type="submit" disabled={round.status !== 'active' && round.status !== 'untie'}>
-            <Send fontSize="large"/>
-          </IconButton>
-        </form>
-        <Divider style={{margin: '10px 0'}}/>
-        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}> 
-          <Button 
-            variant="contained" 
-            color="primary" 
-            style={{margin: '0 5px'}} 
-            disabled={round.status !== 'tie'}
-            onClick={() => {firestore.updateRound(round.id, {cardList: [], status: 'untie', tiedList: round.winners, winners: []})}}
-          >
-           Desempate
-          </Button>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            style={{margin: '0 5px'}} 
-            disabled={round.status !== 'tie'}
-            onClick={() => {firestore.updateRound(round.id, {status: 'finished'})}}
-          >
-           Terminar
-          </Button>
-        </div>
-      </Grid>
-    </ExpansionPanelDetails>
-  </ExpansionPanel>
+    <Fragment>
+      <ExpansionPanel square expanded={expand} onChange={onSelect(round.id)}>
+        <ExpansionPanelSummary>
+          <Typography>Ronda {round.id}</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Grid container style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, padding: '10px'}} spacing={4}>
+            {
+              round.status === 'active' ? 
+              <Typography variant="h6" style={{color: 'green', fontWeight: 500}}>Ronda activa</Typography>
+              :
+              round.status === 'finished' ? 
+              <Typography variant="h6" style={{color: 'gray', fontWeight: 500}}>Ronda terminada</Typography>
+              :
+              round.status === 'tie' ? 
+              <Typography variant="h6" style={{color: 'red', fontWeight: 500}}>Empate</Typography>
+              :
+              <Typography variant="h6" style={{color: 'blue', fontWeight: 500}}>Desempate</Typography>
+            }
+            {
+              round.status === 'untie' ? 
+              <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Jugadores al desempate:</Typography>
+              :
+              <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Ganadores:</Typography>
+            }
+            {
+              round.status === 'untie' ? 
+              round.tiedList.map(tied => <Typography style={{color: 'green'}} key={tied.doc} align="left">{tied.user} con la carta #{tied.doc}</Typography>)
+              :
+              round.winners.map(winner => <Typography style={{color: 'green'}} key={winner.doc} align="left">{winner.user} con la carta #{winner.doc}</Typography>)
+            }
+            <Divider style={{margin: '10px 0'}}/>
+            <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Premio:</Typography>
+            <Typography style={{color: 'green'}} align="left">{round.prize}</Typography>
+            <Divider style={{margin: '10px 0'}}/>
+            <Typography variant="subtitle1" align="left" style={{fontWeight: 500}}>Lista de Cartas</Typography>
+            <GridList cellHeight="auto" cols={listCols} style={{...listWidthStyle, flexWrap: 'nowrap', transform: 'translateZ(0)', minHeight: '90px'}}>
+              {round.cardList.slice(0).reverse().map(card => (
+                <GridListTile key={card}>
+                  <MiniCardListItem card={card}/>
+                </GridListTile>
+              )
+              )}
+            </GridList>
+            <Divider style={{margin: '10px 0'}}/>
+            <MiniCard card={card}/>
+            <form onSubmit={onSubmit} style={{marginLeft: '45px'}}>
+              <TextField
+                label="Carta"
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputProps={{min: 0, style: { textAlign: 'center' }}}
+                value={card}
+                onChange={onChangeCard}
+                error={error}
+                disabled={round.status !== 'active' && round.status !== 'untie'}
+              />
+              <IconButton color="primary" type="submit" disabled={round.status !== 'active' && round.status !== 'untie'}>
+                <Send fontSize="large"/>
+              </IconButton>
+            </form>
+            <Divider style={{margin: '10px 0'}}/>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}> 
+              <Button 
+                variant="contained" 
+                color="primary" 
+                style={{margin: '0 5px'}} 
+                disabled={round.status !== 'tie'}
+                onClick={() => {firestore.updateRound(round.id, {cardList: [], status: 'untie', tiedList: round.winners, winners: []})}}
+              >
+              Desempate
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                style={{margin: '0 5px'}} 
+                disabled={round.status !== 'tie'}
+                onClick={() => {firestore.updateRound(round.id, {status: 'finished'})}}
+              >
+              Terminar
+              </Button>
+            </div>
+          </Grid>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    </Fragment>
   )
 }
 
