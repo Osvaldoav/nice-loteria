@@ -21,7 +21,7 @@ export const streamUsers = (observer) => {
   return db.collection('users').onSnapshot(observer);
 };
 
-// Get all existing users
+// Get all existing rounds
 export const streamRounds = (observer) => {
   return db.collection('rounds').onSnapshot(observer);
 };
@@ -29,6 +29,11 @@ export const streamRounds = (observer) => {
 // Get all existing tables with no user id assigned
 export const streamTablesWithNoUserID = (observer) => {
   return db.collection('tables').where('user_id', "==", "").onSnapshot(observer);
+};
+
+// Get all existing tables with any user id assigned
+export const streamTablesWithAnyUserID = (observer) => {
+  return db.collection('tables').where('user_id', ">", "").onSnapshot(observer);
 };
 
 // Get all existing tables with a specific user id

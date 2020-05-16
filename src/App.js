@@ -1,15 +1,25 @@
 import React, {useState} from 'react';
 import './App.css';
 import Admin from './containers/Admin';
+import CreateTableForm from './components/CreateTableForm';
 import backImg from './images/back3.jpg';
+import Routes from './Routes';
+
+const style = {
+  container: {
+    backgroundImage: `url(${backImg})`, 
+    backgroundAttachment: 'fixed', 
+    minHeight: '100vh', 
+    paddingBottom: '50px'
+  }
+}
 
 function App() {
 
   return (
-    <div className="App" style={{backgroundImage: `url(${backImg})`, backgroundAttachment: 'fixed', minHeight: '100vh', paddingBottom: '50px'}}>
-       {/* <div className="App" style={{backgroundColor: '#15243D', height: '100vh'}}>  */}
+    <div className="App" style={style.container}>
       {/* <CreateTableForm/> */}
-      <Admin/>
+      <Routes/>
     </div>
   );
 }

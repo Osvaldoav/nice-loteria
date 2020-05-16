@@ -31,14 +31,16 @@ const ExpansionPanel = withStyles({
 const ExpansionPanelSummary = withStyles({
   root: {
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    backgroundColor: 'rgb(250, 250, 250)',
     margin: 0,
     minHeight: 56,
     padding: '0 0 0 10px',
     '&$expanded': {
       minHeight: 56,
+      backgroundColor: 'rgba(0, 0, 0, .08)'
     },
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, .05)',
+      backgroundColor: 'rgba(0, 0, 0, .08)',
     }
   },
   content: {
