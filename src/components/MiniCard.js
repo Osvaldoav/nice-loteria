@@ -20,7 +20,7 @@ const style = {
   }
 };
 
-function MiniTable({card}) {
+function MiniCard({card}) {
   return (
     <Grid item>
       <Card style={{display: 'inline-flex', marginBottom: '5px'}}>
@@ -36,4 +36,4 @@ function MiniTable({card}) {
   )
 }
 
-export default React.memo(MiniTable);
+export default React.memo(MiniCard);

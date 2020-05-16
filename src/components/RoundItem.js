@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
-import {Typography, Grid, TextField, IconButton} from '@material-ui/core';
+import {Typography, Grid, TextField, IconButton, GridListTile, GridList, Divider} from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import MiniCard from './MiniCard';
+import MiniCardListItem from './MiniCardListItem';
 import { Send } from '@material-ui/icons';
 
 const ExpansionPanel = withStyles({
@@ -27,14 +29,16 @@ const ExpansionPanel = withStyles({
 const ExpansionPanelSummary = withStyles({
   root: {
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    backgroundColor: 'rgb(250, 250, 250)',
     margin: 0,
     minHeight: 56,
     padding: '0 0 0 10px',
     '&$expanded': {
       minHeight: 56,
+      backgroundColor: 'rgba(0, 0, 0, .08)'
     },
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, .05)',
+      backgroundColor: 'rgba(0, 0, 0, .08)',
     }
   },
   content: {
@@ -59,6 +63,12 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 function RoundItem({round, expand, onSelect}) {
   const [card, setCard] = useState('');
   const [error, setError] = useState(false);
+
+  const xs = useMediaQuery('(max-width: 600px)');
+  const md = useMediaQuery('(min-width: 601px) and (max-width: 900px)');
+
+  const listWidthStyle = xs ? {width: '400px'} : md ? {width: '500px'} : {width: '850px'};
+  const listCols= xs ? 6 : md ? 8 : 13;
 
   const onChangeCard = (e) => {
     const val = e.target.value;
@@ -90,7 +100,34 @@ function RoundItem({round, expand, onSelect}) {
       <Typography>Ronda {round.id}</Typography>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
-      <Grid container style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1, padding: '10px'}} spacing={4}>
+      <Grid container style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, padding: '10px'}} spacing={4}>
+        {
+          round.status === 'active' ? 
+          <Typography variant="h6" style={{color: 'green', fontWeight: 500}}>Ronda activa</Typography>
+          :
+          round.status === 'finished' ? 
+          <Typography variant="h6" style={{color: 'gray', fontWeight: 500}}>Ronda terminada</Typography>
+          :
+          <Typography variant="h6" style={{color: 'red', fontWeight: 500}}>Empate</Typography>
+        }
+        <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Ganadores:</Typography>
+        {
+          round.winners.map(winner => <Typography style={{color: 'green'}} key={winner.doc} align="left">{winner.user} con la carta {winner.doc}</Typography>)
+        }
+        <Divider style={{margin: '10px 0'}}/>
+        <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Premio:</Typography>
+        <Typography style={{color: 'green'}} align="left">{round.prize}</Typography>
+        <Divider style={{margin: '10px 0'}}/>
+        <Typography variant="subtitle1" align="left" style={{fontWeight: 500}}>Lista de Cartas</Typography>
+        <GridList cellHeight="auto" cols={listCols} style={{...listWidthStyle, flexWrap: 'nowrap', transform: 'translateZ(0)'}}>
+          {round.cardList.slice(0).reverse().map(card => (
+            <GridListTile key={card}>
+              <MiniCardListItem card={card}/>
+            </GridListTile>
+          )
+          )}
+        </GridList>
+        <Divider style={{margin: '10px 0'}}/>
         <MiniCard card={card}/>
         <form onSubmit={onSubmit} style={{marginLeft: '45px'}}>
           <TextField
@@ -104,8 +141,9 @@ function RoundItem({round, expand, onSelect}) {
             value={card}
             onChange={onChangeCard}
             error={error}
+            disabled={round.status !== 'active'}
           />
-          <IconButton color="primary" type="submit">
+          <IconButton color="primary" type="submit" disabled={round.status !== 'active'}>
             <Send fontSize="large"/>
           </IconButton>
         </form>

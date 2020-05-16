@@ -51,6 +51,10 @@ export const onRoundChange = functions.firestore
 .document('rounds/{roundID}')
 .onUpdate(async (change) => {
   const after = change.after.data();
+  const before = change.before.data();
+  console.log('before:', before);
+  console.log('after:', after);
+
   let winners:{doc: string, user: string}[] = new Array();
   let status;
 
@@ -71,23 +75,29 @@ export const onRoundChange = functions.firestore
   
     try {
       const snapshot = await db.collection('tables').where('user_id', '>', '').get();
-      snapshot.forEach(doc => {
+      await Promise.all(snapshot.docs.map(async doc => {
         const isWinner = selectedPlay.some(play => {
           const cards = play.map(index => doc.data().cards[index]);
-          console.log(`cards for doc [${doc.id}]`, cards);
           return cards.every((card : number) => after.cardList.includes(card));
         })
         
-        if(isWinner) winners.push({doc: doc.id, user: doc.data().user_id});
-      });
+        if(isWinner) {
+          const userDoc = await db.collection('users').doc(doc.data().user_id).get();
+          let user = "Jugador";
+          if(userDoc){
+            const userData = userDoc.data();
+            if(userData) user = userData.name;
+          }
+          winners.push({doc: doc.id, user: user});
+        }
+      }));
       status = winners.length > 1 ? "tie" : winners.length > 0 ? "finished" : "active";
     } 
     catch (error) {
       console.log("couldn't search through table documents", error);
     }
   }
-
-  console.log('winners', winners);
+  
   return db.collection('rounds').doc(change.after.id).update({winners: winners, status: status});
 })
 

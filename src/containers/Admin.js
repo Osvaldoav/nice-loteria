@@ -11,8 +11,7 @@ export const TablesContext = React.createContext();
 
 const style = {
   cardContainer: {
-    marginTop: '20px', 
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    marginTop: '20px',
     padding: '10px'
   }
 };
@@ -41,12 +40,12 @@ function Admin() {
       <Container maxWidth="md">
         <TitleHeader/>
         <Card style={style.cardContainer}>
-          <UserTitle/>
-          <UserList/>
-        </Card>
-        <Card style={style.cardContainer}>
           <RoundsTitle/>
           <RoundsList/>
+        </Card>
+        <Card style={style.cardContainer}>
+          <UserTitle/>
+          <UserList/>
         </Card>
       </Container>
     </TablesContext.Provider>
