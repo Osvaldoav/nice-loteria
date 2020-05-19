@@ -16,6 +16,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// Check if user is authenticated
+export const isAuth = () => {
+  return firebase.auth().onAuthStateChanged(user => user);
+}
+
+// Sign in with email and password
+export const signIn = (email, password) => {
+  return firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
 // Get all existing users
 export const streamUsers = (observer) => {
   return db.collection('users').onSnapshot(observer);
