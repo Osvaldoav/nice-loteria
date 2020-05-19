@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddRoundDialog({open, handleClose, handleAddTable}) {
+export default function AddRoundDialog({open, handleClose}) {
   const classes = useStyles();
   const [lastRound, setLastRound] = useState(0);
   const [selectedPlay, setSelectedPlay] = useState('');
@@ -90,9 +90,9 @@ export default function AddRoundDialog({open, handleClose, handleAddTable}) {
         winners: []
       };
 
+      handleClose();
       firestore.createRound((lastRound + 1).toString(), data)
       .then( () => {
-        handleClose();
         setSelectedPlay('');
         setPrize('');
         console.log('round created!');

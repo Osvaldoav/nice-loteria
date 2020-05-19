@@ -18,6 +18,11 @@ function RoundsList () {
         snapshot.forEach(doc => {
           data.push({...doc.data(), id: doc.id});
         });
+        data.sort((a,b) => a.id - b.id);
+        
+        if(data.length > 0)
+          setSelected(data[data.length - 1].id);
+
         setRounds(data);
       },
       error: err => console.log('Error getting rounds documents', err)

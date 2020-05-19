@@ -1,4 +1,4 @@
-import React, {useState, Fragment} from 'react';
+import React, {useState, Fragment, useEffect, useRef} from 'react';
 import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -72,6 +72,15 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 function RoundItem({round, expand, onSelect}) {
   const [card, setCard] = useState('');
   const [error, setError] = useState(false);
+
+  // const inputRef = useRef(null);
+  // useEffect(() => {
+  //   if(expand){
+  //     console.log('expanded!');
+  //     inputRef.current.focus();
+  //   }
+  // }, [expand]);
+
 
   const xs = useMediaQuery('(max-width: 600px)');
   const md = useMediaQuery('(min-width: 601px) and (max-width: 900px)');
@@ -163,6 +172,7 @@ function RoundItem({round, expand, onSelect}) {
                 onChange={onChangeCard}
                 error={error}
                 disabled={round.status !== 'active' && round.status !== 'untie'}
+                autoFocus
               />
               <IconButton color="primary" type="submit" disabled={round.status !== 'active' && round.status !== 'untie'}>
                 <Send fontSize="large"/>
@@ -196,4 +206,4 @@ function RoundItem({round, expand, onSelect}) {
   )
 }
 
-export default RoundItem;
+export default React.memo(RoundItem);

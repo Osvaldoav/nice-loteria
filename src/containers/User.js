@@ -68,7 +68,7 @@ function User(props) {
   },[currentRound]);
 
   const [openSnack, setOpenSnack] = useState(false);
-  const [snackHist, setSnackHist] = useState(false);
+  const [snackHist, setSnackHist] = useState(true);
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -78,8 +78,10 @@ function User(props) {
     setSnackHist(true);
   };
 
-  if(roundInfo.status === 'finished' && !openSnack && !snackHist) setOpenSnack(true);
-  if(roundInfo.status === 'active' && snackHist) setSnackHist(false);
+  if(roundInfo){
+    if(roundInfo.status === 'finished' && !openSnack && !snackHist) setOpenSnack(true);
+    if(roundInfo.status === 'active' && snackHist) setSnackHist(false);
+  }
 
   return (
     <Fragment>
@@ -124,7 +126,7 @@ function User(props) {
       </Card>
       {
         roundInfo ?
-        <Snackbar open={openSnack} autoHideDuration={5000} onClose={handleCloseSnack}>
+        <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
           {
             roundInfo.winners.some(winner => tables.map(table => table.id).includes(winner.doc)) ?
             <Alert onClose={handleCloseSnack} severity="success">
