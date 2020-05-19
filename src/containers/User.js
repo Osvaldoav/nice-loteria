@@ -116,7 +116,7 @@ function User(props) {
             </GridList>
             <Divider style={{margin: '10px 0'}}/>
             {
-              tables.map(table => <Table table={table}/>)
+              tables.map(table => <Table table={table} key={table.id}/>)
             }
           </>
           : null

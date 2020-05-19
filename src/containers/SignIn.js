@@ -58,7 +58,7 @@ function SignIn() {
           placeholder="email@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          error={error}
+          error={error ? true : false}
           InputLabelProps={{
             shrink: true,
           }}
@@ -71,7 +71,7 @@ function SignIn() {
           placeholder="contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          error={error}
+          error={error ? true : false}
           InputLabelProps={{
             shrink: true,
           }}

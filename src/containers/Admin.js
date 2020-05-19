@@ -5,6 +5,7 @@ import UserList from '../components/UserList';
 import UserTitle from '../components/UserTitle';
 import RoundsTitle from '../components/RoundsTitle';
 import RoundsList from '../components/RoundsList';
+import SignIn from './SignIn';
 
 export const TablesContext = React.createContext();
 
@@ -33,18 +34,29 @@ function Admin() {
     return unsubscribe;
   },[]);
 
-  return (
-    <TablesContext.Provider value={tables}>
-      <Card style={style.cardContainer}>
-        <RoundsTitle/>
-        <RoundsList/>
-      </Card>
-      <Card style={style.cardContainer}>
-        <UserTitle/>
-        <UserList/>
-      </Card>
-    </TablesContext.Provider>
-  )
+  const [isAuth, setIsAuth] = useState(false);
+  useEffect(() => {
+    const unsubscribe = firestore.isAuth(user => setIsAuth(user));
+    return unsubscribe;
+  },[]);
+
+  if(isAuth){
+    return (
+      <TablesContext.Provider value={tables}>
+        <Card style={style.cardContainer}>
+          <RoundsTitle/>
+          <RoundsList/>
+        </Card>
+        <Card style={style.cardContainer}>
+          <UserTitle/>
+          <UserList/>
+        </Card>
+      </TablesContext.Provider>
+    )
+  }
+  else {
+    return <SignIn/>
+  }
 }
 
 export default Admin;

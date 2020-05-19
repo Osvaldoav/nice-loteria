@@ -17,8 +17,8 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Check if user is authenticated
-export const isAuth = () => {
-  return firebase.auth().onAuthStateChanged(user => user);
+export const isAuth = (observer) => {
+  return firebase.auth().onAuthStateChanged(observer);
 }
 
 // Sign in with email and password
