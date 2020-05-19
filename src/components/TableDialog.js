@@ -6,11 +6,6 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Table from './Table';
 
-// const table = {
-//   cards: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
-//   id: "00"
-// };
-
 const DialogContent = withStyles((theme) => ({
   root: {
     padding: 0,

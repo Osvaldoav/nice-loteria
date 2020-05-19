@@ -1,7 +1,6 @@
 import React, {Fragment, useState} from 'react';
 import {Typography, Divider, IconButton, Box} from '@material-ui/core';
-import Add from '@material-ui/icons/Add';
-import Refresh from '@material-ui/icons/Refresh';
+import {Add, Refresh} from '@material-ui/icons';
 import AddRoundDialog from './AddRoundDialog';
 
 const style = {

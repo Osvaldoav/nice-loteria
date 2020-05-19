@@ -1,11 +1,16 @@
 import React, {useState, useContext} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import {DialogTitle, FormControl, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
+import {
+  DialogTitle, 
+  FormControl, 
+  Select, 
+  MenuItem, 
+  FormHelperText, 
+  Button, 
+  Dialog
+} from '@material-ui/core';
 import MiniTable from './MiniTable';
 import {TablesContext} from '../containers/Admin';
 

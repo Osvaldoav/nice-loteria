@@ -12,8 +12,7 @@ import {
   Dialog, 
   Button
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 
@@ -125,7 +124,6 @@ export default function AddRoundDialog({open, handleClose, handleAddTable}) {
 
           <TextField
             label="Escribe el premio"
-            // helperText="Escribe el premio"
             InputLabelProps={{
               shrink: true,
             }}
@@ -134,7 +132,6 @@ export default function AddRoundDialog({open, handleClose, handleAddTable}) {
             error={prizeError}
             onChange={handlePrizeChange}
           />
-          {/* <FormHelperText>Selecciona la jugada</FormHelperText> */}
         </FormControl>
       </DialogContent>
       <DialogActions>

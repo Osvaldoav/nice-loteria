@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {CssBaseline, Container, Card} from '@material-ui/core';
 import * as firestore from '../services/firestore';
-import TitleHeader from '../components/TitleHeader';
+import Card from '@material-ui/core/Card';
 import UserList from '../components/UserList';
 import UserTitle from '../components/UserTitle';
 import RoundsTitle from '../components/RoundsTitle';
@@ -36,18 +35,14 @@ function Admin() {
 
   return (
     <TablesContext.Provider value={tables}>
-      {/* <CssBaseline /> */}
-      <Container maxWidth="md">
-        <TitleHeader/>
-        <Card style={style.cardContainer}>
-          <RoundsTitle/>
-          <RoundsList/>
-        </Card>
-        <Card style={style.cardContainer}>
-          <UserTitle/>
-          <UserList/>
-        </Card>
-      </Container>
+      <Card style={style.cardContainer}>
+        <RoundsTitle/>
+        <RoundsList/>
+      </Card>
+      <Card style={style.cardContainer}>
+        <UserTitle/>
+        <UserList/>
+      </Card>
     </TablesContext.Provider>
   )
 }

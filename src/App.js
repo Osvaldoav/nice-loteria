@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import Admin from './containers/Admin';
-import CreateTableForm from './components/CreateTableForm';
+import TittleHeader from './components/TitleHeader';
 import backImg from './images/back3.jpg';
 import Routes from './Routes';
+import { Container } from '@material-ui/core';
 
 const style = {
   container: {
@@ -18,8 +18,10 @@ function App() {
 
   return (
     <div className="App" style={style.container}>
-      {/* <CreateTableForm/> */}
-      <Routes/>
+      <Container maxWidth="md">
+        <TittleHeader/>
+        <Routes/>
+      </Container>
     </div>
   );
 }

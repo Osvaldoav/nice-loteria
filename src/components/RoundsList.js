@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import RoundItem from './RoundItem';
 import * as firestore from '../services/firestore';
+import RoundItem from './RoundItem';
 
 function RoundsList () {
   const [rounds, setRounds] = useState([]);

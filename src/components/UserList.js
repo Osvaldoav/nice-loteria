@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import UserItem from './UserItem';
 import * as firestore from '../services/firestore';
+import UserItem from './UserItem';
 
 function UserList () {
   const [users, setUsers] = useState([]);

@@ -1,7 +1,6 @@
 import React from 'react';
 import alts from '../images/cards/alts.json';
-import {Typography, Grid, Card} from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import {Typography, Grid, Card, Box} from '@material-ui/core';
 
 const style = {
   card: {

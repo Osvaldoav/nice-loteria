@@ -1,9 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import alts from '../images/cards/alts.json';
 import {Typography, Card, Grid} from '@material-ui/core';
 import MuiCardActionArea from '@material-ui/core/CardActionArea';
 import MuiBox from '@material-ui/core/Box';
+import alts from '../images/cards/alts.json';
 
 const style = {
   miniCard: {

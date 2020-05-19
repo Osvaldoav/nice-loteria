@@ -1,14 +1,23 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, Fragment} from 'react';
 import * as firestore from '../services/firestore';
 import { withStyles } from '@material-ui/core/styles';
-import {Typography, Grid, TextField, IconButton, GridListTile, GridList, Divider, Button} from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Send from '@material-ui/icons/Send';
+import {
+  Typography, 
+  Grid, 
+  TextField, 
+  IconButton, 
+  GridListTile, 
+  GridList, 
+  Divider, 
+  Button, 
+  useMediaQuery
+} from '@material-ui/core';
 import MiniCard from './MiniCard';
 import MiniCardListItem from './MiniCardListItem';
-import { Send } from '@material-ui/icons';
 
 const ExpansionPanel = withStyles({
   root: {
