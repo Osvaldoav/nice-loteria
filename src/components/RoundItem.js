@@ -1,6 +1,7 @@
 import React, {useState, Fragment, useEffect, useRef} from 'react';
 import * as firestore from '../services/firestore';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles} from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -72,15 +73,21 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 function RoundItem({round, expand, onSelect}) {
   const [card, setCard] = useState('');
   const [error, setError] = useState(false);
+  const [changed, setChanged] = useState(true);
 
-  // const inputRef = useRef(null);
-  // useEffect(() => {
-  //   if(expand){
-  //     console.log('expanded!');
-  //     inputRef.current.focus();
-  //   }
-  // }, [expand]);
+  const inputRef = useRef(null);
 
+  useEffect(() => {
+    if(round.changed)
+      setChanged(true);
+  }, [round]);
+
+  useEffect(() => {
+    if(changed)
+      inputRef.current.focus();
+  }, [changed]);
+
+  
 
   const xs = useMediaQuery('(max-width: 600px)');
   const md = useMediaQuery('(min-width: 601px) and (max-width: 900px)');
@@ -101,12 +108,12 @@ function RoundItem({round, expand, onSelect}) {
     e.preventDefault();
 
     if(card !== '' && !error){
-      const roundData = {cardList: [...round.cardList, Number(card)]};
-      delete roundData.id;
+      setCard('');
+      setChanged(false);
+      const roundData = {cardList: [...round.cardList, Number(card)], changed: false};
       firestore.updateRound(round.id, roundData)
       .then(() => {
-        setCard('');
-        console.log('card added round');
+        console.log('card added to round');
       })
       .catch(err => console.log('error adding card to round', err));
     }
@@ -132,7 +139,7 @@ function RoundItem({round, expand, onSelect}) {
               :
               <Typography variant="h6" style={{color: 'blue', fontWeight: 500}}>Desempate</Typography>
             }
-            {
+            {/* {
               round.status === 'untie' ? 
               <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Jugadores al desempate:</Typography>
               :
@@ -143,10 +150,36 @@ function RoundItem({round, expand, onSelect}) {
               round.tiedList.map(tied => <Typography style={{color: 'green'}} key={tied.doc} align="left">{tied.user} con la carta #{tied.doc}</Typography>)
               :
               round.winners.map(winner => <Typography style={{color: 'green'}} key={winner.doc} align="left">{winner.user} con la carta #{winner.doc}</Typography>)
-            }
+            } */}
             <Divider style={{margin: '10px 0'}}/>
-            <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Premio:</Typography>
-            <Typography style={{color: 'green'}} align="left">{round.prize}</Typography>
+            <Grid container alignItems="center" style={{justifyContent: 'space-evenly'}}>
+              {
+                round.status === 'untie' ? 
+                <Box>
+                  <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Jugadores al desempate:</Typography>
+                  <Typography style={{color: 'green', fontWeight: 500}} align="center">{round.tiedList.map(tied => `${tied.user} #${tied.doc}`).join(', ')}</Typography>
+                </Box>
+                :
+                <Box>
+                  <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Ganadores:</Typography>
+                  <Typography style={{color: 'green', fontWeight: 500}} align="center">{round.winners.map(winner => `${winner.user} #${winner.doc}`).join(', ')}</Typography>
+                </Box>
+              }
+            </Grid>
+            <Divider style={{margin: '10px 0'}}/>
+            <Grid container alignItems="center" style={{justifyContent: 'space-evenly'}}>
+              <Box>
+                <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Premio:</Typography>
+                <Typography style={{color: 'green', fontWeight: 500}} align="center">{round.prize}</Typography>
+              </Box>
+              <Divider orientation="vertical" flexItem />
+              <Box>
+                <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Jugada:</Typography>
+                <Typography style={{color: 'green', fontWeight: 500}} align="center">{round.winCondition}</Typography>
+              </Box>
+            </Grid>
+            {/* <Typography style={{fontWeight: 500, marginTop: '5px'}} align="left">Premio:</Typography>
+            <Typography style={{color: 'green', fontWeight: 500}} align="left">{round.prize}</Typography> */}
             <Divider style={{margin: '10px 0'}}/>
             <Typography variant="subtitle1" align="left" style={{fontWeight: 500}}>Lista de Cartas</Typography>
             <GridList cellHeight="auto" cols={listCols} style={{...listWidthStyle, flexWrap: 'nowrap', transform: 'translateZ(0)', minHeight: '90px'}}>
@@ -171,10 +204,11 @@ function RoundItem({round, expand, onSelect}) {
                 value={card}
                 onChange={onChangeCard}
                 error={error}
-                disabled={round.status !== 'active' && round.status !== 'untie'}
+                disabled={!changed || (round.status !== 'active' && round.status !== 'untie')}
+                inputRef={inputRef}
                 autoFocus
               />
-              <IconButton color="primary" type="submit" disabled={round.status !== 'active' && round.status !== 'untie'}>
+              <IconButton color="primary" type="submit" disabled={!changed || (round.status !== 'active' && round.status !== 'untie')}>
                 <Send fontSize="large"/>
               </IconButton>
             </form>

@@ -58,7 +58,9 @@ export const onRoundChange = functions.firestore
   let winners:{doc: string, user: string}[] = new Array();
   let status, tiedList;
 
-  if(after && (after.status === 'active' || after.status === 'untie')){
+  if(before && after && (after.status === 'active' || after.status === 'untie') && !arraysMatch(before.cardList, after.cardList)){
+    console.log('IT IS ACTIVE OR UNTIE!!');
+
     const plays: {[key: string] : number [][]} = {
       "Chorro": [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15], [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], [0,5,10,15], [3,6,9,12]],
       "4 Esquinas": [[0,3,12,15]],
@@ -124,9 +126,16 @@ export const onRoundChange = functions.firestore
     catch (error) {
       console.log("couldn't search through table documents", error);
     }
-    return db.collection('rounds').doc(change.after.id).update({winners: winners, status: status, tiedList: tiedList});
-  }
 
+    let data = {};
+
+    if(tiedList.length > 0 && before && !arraysMatch(tiedList, before.tiedList)) data = {...data, tiedList: tiedList};
+    if(winners.length > 0 && before && !arraysMatch(winners, before.winners)) data = {...data, winners: winners};
+    if(!isEmpty(data)) data = {...data, status: status};
+
+    return db.collection('rounds').doc(change.after.id).update({...data, changed: true});
+  }
+  console.log('IS NOT ACTIVE NOR UNTIE');
   return Promise.resolve;
 })
 
@@ -138,3 +147,19 @@ export const onRoundCreate = functions.firestore
 
   return ref.update({round: round});
 })
+
+const arraysMatch = (arr1 : any[], arr2 : any[]) => {
+	if (arr1.length !== arr2.length) return false;
+
+	for (let i = 0; i < arr1.length; i++)
+		if (arr1[i] !== arr2[i]) return false;
+
+	return true;
+};
+
+const isEmpty = (obj : any) => {
+  for(let key in obj)
+      if(obj.hasOwnProperty(key))
+          return false;
+  return true;
+}

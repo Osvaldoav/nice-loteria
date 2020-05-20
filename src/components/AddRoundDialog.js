@@ -85,6 +85,7 @@ export default function AddRoundDialog({open, handleClose}) {
         cardList: [],
         prize: prize,
         status: "active",
+        changed: true,
         winCondition: selectedPlay,
         tiedList: [],
         winners: []
