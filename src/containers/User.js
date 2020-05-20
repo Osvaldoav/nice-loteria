@@ -67,20 +67,19 @@ function User(props) {
     }
   },[currentRound]);
 
-  const [openSnack, setOpenSnack] = useState(false);
+  const [openWinSnack, setOpenWinSnack] = useState(false);
+  const [openTieSnack, setOpenTieSnack] = useState(false);
   const [snackHist, setSnackHist] = useState(true);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenSnack(false);
+  const handleCloseSnack = () => {
+    setOpenWinSnack(false);
+    setOpenTieSnack(false);
     setSnackHist(true);
   };
 
   if(roundInfo){
-    if(roundInfo.status === 'finished' && !openSnack && !snackHist) setOpenSnack(true);
-    if(roundInfo.status === 'active' && snackHist) setSnackHist(false);
+    if(roundInfo.status === 'finished' && !openWinSnack && !snackHist) setOpenWinSnack(true);
+    if(roundInfo.status === 'tie' && !openTieSnack && !snackHist) setOpenTieSnack(true);
+    if((roundInfo.status === 'active' || roundInfo.status === 'untie') && snackHist) setSnackHist(false);
   }
 
   return (
@@ -97,23 +96,32 @@ function User(props) {
             <Divider/>
             {
               roundInfo.status === 'active' ? 
-              <Typography variant="h6" style={{color: 'green', marginTop: '10px'}}>Ronda activa</Typography>
+              <Typography variant="h6" style={{color: 'gray', marginTop: '10px'}}>Ronda en juego</Typography>
               :
-              roundInfo.status === 'finished' ? 
-              <Typography variant="h6" style={{color: 'gray', marginTop: '10px'}}>Ronda terminada</Typography>
+              roundInfo.status === 'finished' && roundInfo.winners.some(winner => tables.map(table => table.id).includes(winner.doc)) ? 
+              <Typography variant="h6" style={{color: 'green', marginTop: '10px'}}>Has ganado</Typography>
+              :
+              roundInfo.status === 'finished'? 
+              <Typography variant="h6" style={{color: 'red', marginTop: '10px'}}>Alguien mas ha ganado</Typography>
+              :
+              roundInfo.status === 'tie' && roundInfo.winners.some(winner => tables.map(table => table.id).includes(winner.doc)) ? 
+              <Typography variant="h6" style={{color: 'orange', marginTop: '10px'}}>Has empatado</Typography>
               :
               roundInfo.status === 'tie' ? 
-              <Typography variant="h6" style={{color: 'red', marginTop: '10px'}}>Empate</Typography>
+              <Typography variant="h6" style={{color: 'red', marginTop: '10px'}}>Alguien mas ha empatado</Typography>
               :
-              <Typography variant="h6" style={{color: 'blue', marginTop: '10px'}}>Desempate</Typography>
+              roundInfo.status === 'untie' && !roundInfo.tiedList.some(tied => tables.map(table => table.id).includes(tied.doc)) ? 
+              <Typography variant="h6" style={{color: 'red', marginTop: '10px'}}>Has perdido el desempate</Typography>
+              :
+              <Typography variant="h6" style={{color: 'gray', marginTop: '10px'}}>Ronda en desempate</Typography>
             }
             <Divider style={{margin: '10px 0'}}/>
             <Grid container alignItems="center">
-              <Box style={{flex: 1}}>
+              {/* <Box style={{flex: 1}}>
                 <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Cartas ganadoras:</Typography>
                 <Typography style={{color: 'green', fontWeight: 500}} align="center">{roundInfo.winners.map(winner => winner.doc).join(', ')}</Typography>
               </Box>
-              <Divider orientation="vertical" flexItem />
+              <Divider orientation="vertical" flexItem /> */}
               <Box style={{flex: 1}}>
                 <Typography style={{fontWeight: 500, fontSize: '16px'}} align="center">Premio:</Typography>
                 <Typography style={{color: 'green', fontWeight: 500}} align="center">{roundInfo.prize}</Typography>
@@ -144,18 +152,32 @@ function User(props) {
       </Card>
       {
         roundInfo ?
-        <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+        <>
+          <Snackbar open={openWinSnack} autoHideDuration={6000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+            {
+              roundInfo.winners.some(winner => tables.map(table => table.id).includes(winner.doc)) ?
+              <Alert onClose={handleCloseSnack} severity="success">
+                Has ganado!
+              </Alert>
+              :
+              <Alert onClose={handleCloseSnack} severity="error">
+                Alguien más ha ganado!
+              </Alert>
+            }
+          </Snackbar>
+          <Snackbar open={openTieSnack} autoHideDuration={6000} onClose={handleCloseSnack} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
           {
             roundInfo.winners.some(winner => tables.map(table => table.id).includes(winner.doc)) ?
-            <Alert onClose={handleCloseSnack} severity="success">
-              Has ganado!
+            <Alert onClose={handleCloseSnack} severity="warning">
+              Has empatado!
             </Alert>
             :
             <Alert onClose={handleCloseSnack} severity="error">
-              Alguien más ha ganado!
+              Alguien más ha empatado!
             </Alert>
           }
         </Snackbar>
+      </>
         :
         null
       }
